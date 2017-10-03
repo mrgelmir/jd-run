@@ -6,12 +6,14 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-	private readonly int bJump = Animator.StringToHash("jumping");
+	private readonly int bJump = Animator.StringToHash ("jumping");
 
 	[SerializeField]
 	private Animator anim;
 	[SerializeField]
 	private Transform visual;
+	[SerializeField]
+	private SpriteRenderer sprite;
 	[SerializeField]
 	private AudioSource audioSource;
 	[SerializeField]
@@ -24,45 +26,59 @@ public class Character : MonoBehaviour
 	public bool Enabled = true;
 	private bool jumping = false;
 
-	protected void Start()
+	protected void Start ()
 	{
 		if (anim == null)
-			anim = GetComponent<Animator>();
+			anim = GetComponent<Animator> ();
 	}
 
-	protected void Update()
+	protected void Update ()
 	{
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Input.GetKeyDown (KeyCode.Space))
 		{
-			Jump();
+			Jump ();
 		}
 	}
 
-	public void Jump()
+	public void Jump ()
 	{
 		if (!Enabled || jumping)
 			return;
 
 		jumping = true;
 
-		anim.SetBool(bJump, true);
-		visual.DOMove(transform.position + (Vector3.up * jumpHeight), jumpDuration / 2f)
-			.SetLoops(2, LoopType.Yoyo)
-			.OnComplete(() => { jumping = false; });
+		anim.SetBool (bJump, true);
+		visual.DOMove (transform.position + (Vector3.up * jumpHeight), jumpDuration / 2f)
+			.SetLoops (2, LoopType.Yoyo)
+			.OnComplete (() =>
+		{
+			jumping = false;
+		});
 
-		StartCoroutine(EndJumpRoutine());
+		StartCoroutine (EndJumpRoutine ());
 	}
 
-	private IEnumerator EndJumpRoutine()
+	private IEnumerator EndJumpRoutine ()
 	{
-		yield return new WaitForSeconds(jumpDuration * .75f);
-		anim.SetBool(bJump, false);
+		yield return new WaitForSeconds (jumpDuration * .75f);
+		anim.SetBool (bJump, false);
 	}
 
-	public void FootFall()
+	public void FootFall ()
 	{
-		audioSource.PlayOneShot(footFallClips[Random.Range(0, footFallClips.Length)]);
+		audioSource.PlayOneShot (footFallClips [Random.Range (0, footFallClips.Length)]);
 	}
 
+	public void Hurt ()
+	{
+		// TODO change sprite, play audio ...
+		sprite.color = Color.red;
+		sprite.DOColor (Color.white, 1.5f);
+	}
+
+	public void Collect (Sprite s)
+	{
+		// TODO add to UI
+	}
 	
 }

@@ -7,22 +7,36 @@ public class Obstacle : MonoBehaviour
 	[SerializeField]
 	private ObstacleBehaviour behaviour;
 
-	public void OnTriggerEnter2D(Collider2D collision)
+
+	public void OnTriggerEnter2D (Collider2D collision)
 	{
 
-		CharacterCollision c = collision.GetComponent<CharacterCollision>();
+		CharacterCollision c = collision.GetComponent<CharacterCollision> ();
 
 		if (c == null)
 			return;
 
-		print("collision");
+		print ("collision");
 
 		if (behaviour != null)
-			behaviour.OnHit(c.Character);
+		{
+			behaviour.OnHit (c.Character);
+
+			if (behaviour.DestroyOnPickup)
+			{
+				Destroy (gameObject);
+			}
+
+		}
 	}
 }
 
 public abstract class ObstacleBehaviour : ScriptableObject
 {
-	public abstract void OnHit(Character character);
+	[SerializeField]
+	private bool destroyOnPickup = true;
+
+	public bool DestroyOnPickup	{ get { return destroyOnPickup; } }
+
+	public abstract void OnHit (Character character);
 }

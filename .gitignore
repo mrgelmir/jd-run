@@ -19,3 +19,7 @@ JD-Run/[Bb]uild/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+# thumbs.db
+*.db
+*.db.meta
