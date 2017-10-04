@@ -10,33 +10,66 @@ public class Game : MonoBehaviour
 	[SerializeField]
 	private Background bg;
 
-	protected void Start ()
+	[SerializeField]
+	private int roomCount = 10;
+
+	private const float startDistance = 20f;
+	private const float endDistance = 20f;
+
+	private Vector3 startPos;
+
+	protected void Start()
 	{
+		// Record start position
+		startPos = character.transform.position;
+		character.transform.position += Vector3.left * startDistance;
+
 		bg.Moving = false;
 		bg.OnClearRoom += OnRoomClear;
 		character.Enabled = false;
-
-
-
-		MoveCharacterIn ();
-
-
+		character.Running = false;
 	}
 
-	private void MoveCharacterIn ()
+	public void StartGame()
 	{
-		Vector3 startPos = character.transform.position;
-		float distance = 20f;
-		character.transform.position += Vector3.left * distance;
-		character.transform.DOMove (startPos, distance / bg.Speed).SetEase (Ease.Linear).OnComplete (() =>
+		MoveCharacterIn();
+	}
+
+	private void MoveCharacterIn()
+	{
+		character.Running = true;
+		character.transform.DOMove(startPos, startDistance / bg.Speed)
+			.SetEase(Ease.Linear)
+			.OnComplete(() =>
+	   {
+		   bg.Moving = true;
+		   character.Enabled = true;
+	   });
+	}
+
+
+	private void OnRoomClear()
+	{
+		if (--roomCount <= 0)
 		{
-			bg.Moving = true;
-			character.Enabled = true;
-		});
+			bg.AddFinalRoom();
+			bg.OnClearRoom -= OnRoomClear;
+		}
 	}
 
-	private void OnRoomClear ()
+	public void EndGame()
 	{
-		
+		bg.Moving = false;
+
+
+		character.Enabled = false;
+		character.transform.DOMove(character.transform.position + Vector3.right * endDistance, endDistance / bg.Speed)
+			.SetEase(Ease.Linear)
+			.OnComplete(() =>
+		{
+			// Stop moving, turn and look at the baby
+			character.Sprite.flipX = true;
+			character.Running = false;
+		});
 	}
 }

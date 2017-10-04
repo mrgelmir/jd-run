@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-	private readonly int bJump = Animator.StringToHash ("jumping");
+	private readonly int bJump = Animator.StringToHash("jumping");
+	private readonly int bRun = Animator.StringToHash("running");
 
 	[SerializeField]
 	private Animator anim;
@@ -26,59 +27,67 @@ public class Character : MonoBehaviour
 	public bool Enabled = true;
 	private bool jumping = false;
 
-	protected void Start ()
+	public SpriteRenderer Sprite
+	{ get { return sprite; } }
+
+	public bool Running
 	{
-		if (anim == null)
-			anim = GetComponent<Animator> ();
+		set { anim.SetBool(bRun, value); }
 	}
 
-	protected void Update ()
+	protected void Start()
 	{
-		if (Input.GetKeyDown (KeyCode.Space))
+		if (anim == null)
+			anim = GetComponent<Animator>();
+	}
+
+	protected void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			Jump ();
+			Jump();
 		}
 	}
 
-	public void Jump ()
+	public void Jump()
 	{
 		if (!Enabled || jumping)
 			return;
 
 		jumping = true;
 
-		anim.SetBool (bJump, true);
-		visual.DOMove (transform.position + (Vector3.up * jumpHeight), jumpDuration / 2f)
-			.SetLoops (2, LoopType.Yoyo)
-			.OnComplete (() =>
-		{
-			jumping = false;
-		});
+		anim.SetBool(bJump, true);
+		visual.DOMove(transform.position + (Vector3.up * jumpHeight), jumpDuration / 2f)
+			.SetLoops(2, LoopType.Yoyo)
+			.OnComplete(() =>
+	   {
+		   jumping = false;
+	   });
 
-		StartCoroutine (EndJumpRoutine ());
+		StartCoroutine(EndJumpRoutine());
 	}
 
-	private IEnumerator EndJumpRoutine ()
+	private IEnumerator EndJumpRoutine()
 	{
-		yield return new WaitForSeconds (jumpDuration * .75f);
-		anim.SetBool (bJump, false);
+		yield return new WaitForSeconds(jumpDuration * .75f);
+		anim.SetBool(bJump, false);
 	}
 
-	public void FootFall ()
+	public void FootFall()
 	{
-		audioSource.PlayOneShot (footFallClips [Random.Range (0, footFallClips.Length)]);
+		audioSource.PlayOneShot(footFallClips[Random.Range(0, footFallClips.Length)]);
 	}
 
-	public void Hurt ()
+	public void Hurt()
 	{
 		// TODO change sprite, play audio ...
 		sprite.color = Color.red;
-		sprite.DOColor (Color.white, 1.5f);
+		sprite.DOColor(Color.white, 1.5f);
 	}
 
-	public void Collect (Sprite s)
+	public void Collect(Sprite s)
 	{
 		// TODO add to UI
 	}
-	
+
 }

@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad85fb080fd10489dbe329dbfc92d597, type: 3}
   m_Name: Hurt
   m_EditorClassIdentifier: 
-  destroyOnPickup: 1
+  destroyOnPickup: 0

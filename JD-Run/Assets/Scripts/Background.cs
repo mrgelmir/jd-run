@@ -61,9 +61,7 @@ public class Background : MonoBehaviour
 
 				// Remove from active rooms
 				rooms.RemoveAt(i);
-
-
-
+				
 				// Add new Room
 				AddRoom();
 			}
