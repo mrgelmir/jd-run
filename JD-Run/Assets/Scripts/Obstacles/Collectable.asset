@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348bb004cd7824294b2d317ce5ad59c0, type: 3}
   m_Name: Collectable
   m_EditorClassIdentifier: 
-  destroyOnPickup: 0
+  destroyOnPickup: 1

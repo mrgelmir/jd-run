@@ -9,9 +9,11 @@ public class Game : MonoBehaviour
 	private Character character;
 	[SerializeField]
 	private Background bg;
+	[SerializeField]
+	private Animator diaperAnimator;
 
 	[SerializeField]
-	private int roomCount = 10;
+	private int collectCount = 4;
 
 	private const float startDistance = 20f;
 	private const float endDistance = 20f;
@@ -25,9 +27,16 @@ public class Game : MonoBehaviour
 		character.transform.position += Vector3.left * startDistance;
 
 		bg.Moving = false;
-		bg.OnClearRoom += OnRoomClear;
+		//bg.OnClearRoom += OnRoomClear;
+
+		character.OnCollect += OnCollect;
 		character.Enabled = false;
 		character.Running = false;
+
+		OnCollect();
+		OnCollect();
+		OnCollect();
+		OnCollect();
 	}
 
 	public void StartGame()
@@ -48,12 +57,12 @@ public class Game : MonoBehaviour
 	}
 
 
-	private void OnRoomClear()
+	private void OnCollect()
 	{
-		if (--roomCount <= 0)
+		if (--collectCount <= 0)
 		{
 			bg.AddFinalRoom();
-			bg.OnClearRoom -= OnRoomClear;
+			character.OnCollect -= OnCollect;
 		}
 	}
 
@@ -70,6 +79,18 @@ public class Game : MonoBehaviour
 			// Stop moving, turn and look at the baby
 			character.Sprite.flipX = true;
 			character.Running = false;
+
+			Invoke("DropDiapers", 2f);
+
 		});
+
+
+	}
+
+	private void DropDiapers()
+	{
+		// Start covered in poo animation
+		character.transform.DOScaleY(0f, .5f).SetDelay(.7f).OnStart(() => { character.Hurt(); });
+		diaperAnimator.SetTrigger("Drop");
 	}
 }
