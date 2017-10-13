@@ -33,10 +33,6 @@ public class Game : MonoBehaviour
 		character.Enabled = false;
 		character.Running = false;
 
-		OnCollect();
-		OnCollect();
-		OnCollect();
-		OnCollect();
 	}
 
 	public void StartGame()
